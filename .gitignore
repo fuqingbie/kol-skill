@@ -1,0 +1,9 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+
+personas/*/knowledge/
+personas/*/knowledge/**
+personas/*/versions/
+personas/*/versions/**
