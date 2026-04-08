@@ -59,6 +59,10 @@ Step 5 -> 写入文件       （调用 tools/skill_writer.py）
 
 请粘贴公开访谈文字稿、演讲整理稿、播客逐字稿，或你已获授权的文本内容。
 
+如果你手上是 PDF、AVI、MP4、MP3 这类原始素材，先把它们归档到
+`personas/{slug}/knowledge/interviews/` 或 `personas/{slug}/knowledge/media/`，
+再把提取出的文字或转写内容粘贴进来。
+
 如果有多个来源，可以分批追加。
 
 跳过也行，后续随时可以追加（说“追加访谈”）。

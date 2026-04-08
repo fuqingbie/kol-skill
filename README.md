@@ -11,7 +11,7 @@
 从公开访谈、演讲、播客逐字稿、直播整理稿出发<br>
 重点复现孙哥那种高观点密度、强反问感、故事驱动的表达方式
 
-[孙哥亮点](#孙哥亮点) · [安装](#安装) · [使用](#使用) · [孙哥示例](#孙哥示例) · [项目结构](#项目结构)
+[孙哥亮点](#孙哥亮点) · [安装](#安装) · [使用](#使用) · [语料增强](#语料增强) · [孙哥示例](#孙哥示例) · [项目结构](#项目结构)
 
 </div>
 
@@ -132,11 +132,75 @@ pip3 install pypinyin
 
 ---
 
+## 语料增强
+
+如果你想把孙哥做得更像，不要只喂几段文字。更稳的做法是把公开语料分成“可分析文本”和“原始素材”两层：
+
+- 可分析文本：访谈逐字稿、播客转写、直播字幕、演讲整理稿、微博长文、问答实录。
+- 原始素材：PDF、AVI、MP4、MP3、截图、字幕文件、直播录屏。
+
+### 推荐放置方式
+
+```text
+personas/sunyuchen/
+|- SKILL.md
+|- persona.md
+|- meta.json
+`- knowledge/                # 本地语料库，默认不提交到 GitHub
+   |- interviews/
+   |  |- sun_interview_01.pdf
+   |  |- sun_podcast_02.txt
+   |  |- sun_forum_qa_03.md
+   |  `- sun_live_caption_04.srt
+   `- media/
+      |- sun_live_clip_01.avi
+      |- sun_speech_02.mp4
+      |- sun_podcast_03.mp3
+      `- sun_screenshot_04.png
+```
+
+### 怎么操作
+
+1. 先把你收集到的公开 PDF、AVI、MP4、MP3 统一本地归档到 `knowledge/` 目录。
+2. 对 PDF 提取文字，对视频和音频做转写，把结果保存成 `.txt`、`.md` 或 `.srt`。
+3. 在 Skill 环境里执行 `/kol-skill`，或者对已有人物直接说“追加访谈”。
+4. 每次粘贴一段提取后的文字时，顺手标注来源，例如“来源：2021 某次访谈”“来源：某期直播转写”。
+5. 原始文件继续保存在 `knowledge/interviews/` 和 `knowledge/media/`，生成分析仍以你贴进去的文字为准。
+
+### 命令行示例
+
+```bash
+# 1) 建本地语料目录
+mkdir -p personas/sunyuchen/knowledge/interviews
+mkdir -p personas/sunyuchen/knowledge/media
+
+# 2) 放 PDF 和视频
+cp ~/Downloads/sun_interview_01.pdf personas/sunyuchen/knowledge/interviews/
+cp ~/Movies/sun_live_clip_01.avi personas/sunyuchen/knowledge/media/
+
+# 3) PDF 提取文字（示例）
+pdftotext personas/sunyuchen/knowledge/interviews/sun_interview_01.pdf \
+  personas/sunyuchen/knowledge/interviews/sun_interview_01.txt
+
+# 4) 从 AVI 提音频（示例）
+ffmpeg -i personas/sunyuchen/knowledge/media/sun_live_clip_01.avi \
+  -vn -acodec mp3 personas/sunyuchen/knowledge/media/sun_live_clip_01.mp3
+```
+
+### 重要说明
+
+- 这个仓库目前不会自动解析 PDF、AVI、MP4 的内容，分析入口仍然是文字。
+- PDF、AVI、MP4、MP3 更适合作为“本地语料库”和“可追溯素材档案”。
+- 想增加真实感，关键不是文件格式本身，而是把这些素材先变成高质量转写，再持续追加。
+- `knowledge/` 目录默认被 `.gitignore` 忽略，适合你本地长期积累语料，不适合直接公开上传。
+
+---
+
 ## 孙哥示例
 
 仓库内置了一个公开示例：[`personas/sunyuchen`](./personas/sunyuchen)。
 
-这里的“孙哥”指孙宇晨。之所以选他做演示，不是因为合作或背书，而是因为他在公开表达里有非常强的可辨识度：
+这里的“孙哥”指孙宇晨。公开语境里，他常被讨论的标签包括创业者、区块链行业人物、强观点输出者、擅长制造话题的人。这个仓库选择他做 demo，不是因为合作或背书，而是因为他在公开表达里有非常强的可辨识度：
 
 - 观点密度高，喜欢先抛判断再用故事和类比展开。
 - 口语化明显，既能讲抽象概念，也会突然切回很接地气的表达。
@@ -190,6 +254,47 @@ pip3 install pypinyin
         恰恰来自多数人觉得离谱、觉得不靠谱的时候。
 ```
 
+```text
+用户  ❯ 年轻人应该先买房还是先投资自己？
+
+孙哥  ❯ 哥们儿，这个问题你不能用上一代人的默认答案来解。很多人一上来
+        就想把自己绑定进一个几十年的负债结构里，看起来很稳，其实把流动性、
+        选择权、试错空间全压没了。你还没搞清楚自己适合什么、能不能进更大的赛道，
+        就先把未来锁死，这个代价往往比你想的要大。
+```
+
+```text
+用户  ❯ 我父母不同意我创业怎么办？
+
+孙哥  ❯ 其实这个事情本质上不是创业问题，而是边界问题。你成年之后最重要
+        的能力之一，就是重新决定哪些选择由你自己承担，哪些声音只是参考。
+        如果你永远等所有人都同意，你基本上就不可能做真正高波动、但也高回报的事。
+```
+
+```text
+用户  ❯ 比特币到底值不值得普通人关注？
+
+孙哥  ❯ 你先别急着问涨跌，先问它解决了什么。很多人看一个东西，只看价格曲线，
+        这是最低层的理解。比特币真正有意思的地方，是它第一次把“财产控制权”
+        这个问题，用一种互联网原生的方式重新定义了。你看懂这个，再谈配置才有意义。
+```
+
+```text
+用户  ❯ 如果别人一直说我想法不靠谱呢？
+
+孙哥  ❯ 那太正常了。真正让你赚到超额收益的东西，通常在一开始都不符合大多数人的
+        共识。问题不是别人质疑你，而是你自己有没有把逻辑想清楚，有没有准备好承担
+        这个判断带来的后果。很多人不是死在错误上，是死在摇摆上。
+```
+
+```text
+用户  ❯ 婚姻和事业要怎么选？
+
+孙哥  ❯ 我不觉得这是一个简单二选一的问题。更准确地说，婚姻本质上也是一种长期合伙，
+        你选错合伙人，事业会被拖；你选对了，很多事情会被放大。你要看的是两个人的
+        价值观、风险偏好、对未来的理解能不能对齐，而不是只看表面的情绪浓度。
+```
+
 ### 公开说明
 
 - 示例基于公开访谈整理而成。
@@ -219,7 +324,10 @@ kol-skill/
    `- sunyuchen/
       |- SKILL.md
       |- persona.md
-      `- meta.json
+      |- meta.json
+      `- knowledge/          # 本地可扩展，默认被 .gitignore 忽略
+         |- interviews/
+         `- media/
 ```
 
 ---
